@@ -5,15 +5,24 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+
+
+
+
 public class GerenteDoCondominio implements ISistemaDeCondominio {
 
-    private List<Pessoa> Pessoas;
+    private List<TaxaCondominio> TaxaCondominio;
+	private List<Pessoa> Pessoas;
     private List<Pessoa> Proprietarios;
     private List<Unidade> Unidades;
     private List<Contas> Contas;
     private List<Contas> Taxas;
+    private List<Historico> Historicos;
     private List<Contas> ContasRecebidas;
+    private List<Usuarios> Usuarios;
     
+    
+     
     public GerenteDoCondominio(){
 		this.Pessoas = new ArrayList<Pessoa>();
 		this.Proprietarios = new ArrayList<Pessoa>();
@@ -21,129 +30,166 @@ public class GerenteDoCondominio implements ISistemaDeCondominio {
 		this.Contas = new ArrayList<Contas>();
 		this.Taxas = new ArrayList<Contas>();
 		this.ContasRecebidas = new ArrayList<Contas>();
+		this.Historicos = new ArrayList<Historico>();
+		this.TaxaCondominio = new ArrayList<TaxaCondominio>();
+		this.Usuarios = new ArrayList<Usuarios>();
 	}
     
-    @Override
-    public void cadastrarPessoa(Pessoa p) throws PessoaJaExisteException {
-    		if (this.Pessoas.contains(p)){
-    			throw new PessoaJaExisteException("J‡ existe uma pessoa com esse cpf:"+ p);
-    		} else {
-    			this.Pessoas.add(p);
-    		}
-    	
-    	//this.Pessoas = new LinkedList<Pessoa>();
-        	//Pessoas.add(p);
+    public boolean efetuarLogin(String nome, String senha) {
+        for (Usuarios usuario : this.Usuarios) {
+            if (usuario.getNome().equalsIgnoreCase(nome) && (usuario.getSenha().equalsIgnoreCase(senha))) {
+                return true;
+            }
+        }
+
+        return false;
     }
+
     
-    public void removerPessoa (String cpf){
+    @Override
+    public void cadastrarPessoa(Pessoa pessoa) throws PessoaJaExisteException { 
+    	if(existePessoa(pessoa)){
+    		throw new PessoaJaExisteException("");
+    	}
+    	Pessoas.add(pessoa);
+    
+    }
+
+	public boolean existePessoa(Pessoa pessoa) {
+		for(Pessoa p: this.Pessoas){
+    		if (p.equals(pessoa)){
+    			return true;
+    		} 
+    	}
+		return false;
+	}
+    @Override
+    public void removerPessoa (String cpf)throws PessoaInexistenteException{
     	for (Pessoa f : Pessoas) {
         	if (f.getCpf().equals(cpf)) {
-        		Pessoas.remove(f);
-                return;
-            }
-        }
+        		Pessoas.remove(pesquisarPessoa(cpf));
+        		return;
+        	}	        	
+    	}
+    throw new PessoaInexistenteException("Não existe pessoa com esse cpf"+ cpf);
     }
 
     @Override
-    public Pessoa listarPessoa() {
-        for (int i = 0; i < Pessoas.size(); i++) {
-            Pessoas.get(i);
-        }
-        return listarPessoa();
-    }
-
-    @Override
-    public Pessoa pesquisarPessoa(String cpf) {
-        for (Pessoa f : Pessoas) {
-            if (f.getCpf().equals(cpf)) {
-                return f;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void incluirMoradia(Unidade unidade) {
-    	this.Unidades = new LinkedList<Unidade>();
-    	Unidades.add(unidade);
-    }
-
-
-    @Override
-    public String pesquisarHistorico(String NomeDoMorador) {
-       for (Unidade unid : Unidades){
-           if (unid.Morador.equals(NomeDoMorador)){
-               return NomeDoMorador;
-           }
-       }
-        return null;
-    }
-
-    @Override
-    public void incluirProprietario(Pessoa Proprietario) {
-    	this.Proprietarios = new LinkedList<Pessoa>();
-    	Proprietarios.add(Proprietario);
-    }
-
-    @Override
-    public Unidade pesquisarUnidade(int numero) {
-        for (Unidade f : Unidades) {
-            if (f.getNumero() == numero) {
-                return f;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Float somarContas(float Valor) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void GerarTaxa(Contas ValorDaTaxa) {
-    	this.Taxas = new LinkedList<Contas>();
-    	Taxas.add(ValorDaTaxa);
-    }
-
-    @Override
-    public Float ConsultarTaxa(float ValorDaTaxa) {
-    	for (Contas t : Taxas) {
-            if ( t.getTaxa()== ValorDaTaxa) {
-                return ValorDaTaxa;
-            }
-        }
-        return null;    
-    }
-
-    @Override
-    public Contas buscarContas(int Conta) {
-       // for (int i=0; i<Contas.size(); i++){
-         for(Contas c: this.Contas)  { 
-        }
-        return null;
-    }
-
-    @Override
-    public void inserirConta(Contas conta) {
-    	this.Contas = new LinkedList<Contas>();
-    	Contas.add(conta);
-   
-    }
-
-    @Override
-    public Contas receberConta(String Desc) {
-        for (Contas t : Contas) {
-            if ( t.Descricao.equals(Desc) ) {
-                ContasRecebidas.add(t);
-            }
-        }
-    return receberConta(Desc);
+    public List<String> listarPessoas() {
+    	List<String> pessoa = new ArrayList<String>();
+    	for(Pessoa p : this.Pessoas){
+    		pessoa.add(p.getNome());
+    	
+    	}return pessoa;
+    	
+    	
     }
     
+   
+    @Override
+    public Pessoa pesquisarPessoa(String cpf) throws PessoaInexistenteException{
+       for (Pessoa f : Pessoas) {
+            if (f.getCpf().equals(cpf)) {
+                return f;    
+            }
+        }
+        throw new PessoaInexistenteException("Não existe pessoa com esse cpf"); 
+    }
+
+   
+    @Override
+    public String pesquisarHistorico(String NomeDoMorador) throws HistoricoInexistenteException{
+       for (Historico his : this.Historicos){
+           if (his.getMorador().equals(NomeDoMorador)){
+               return NomeDoMorador; 
+           }
+       }return null;
+       
+    }
 
     @Override
-    public String verificarPagamento(String ContasaPagar) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void incluirProprietario(Pessoa Proprietario) throws ProprietarioJaExisteException{
+    	for(Pessoa p : this.Proprietarios){
+    		if(p.getNome().equals(Proprietario.getNome())){
+    			throw new ProprietarioJaExisteException("Já existe um proprietario com esse nome");
+    			}
+    		} 
+    	
+    	this.Proprietarios.add(Proprietario);
+    		
+    		}
+    
+    
+    @Override
+    public String pesquisarUnidade(String numero) throws UnidadeInexistenteException{
+        for (Unidade f : this.Unidades) {
+            if (f.getMorador().equals(numero)) {
+                return numero;
+            }
+        }
+        throw new UnidadeInexistenteException("Não existe unidade com um morador chamado " + numero);
     }
-}
+
+    @Override
+    public float somarContas(float valor) { 
+    	 float valorTotal = 0;
+    	  for(Contas c : this.Contas){
+    		  float result = c.getValorConta();
+    	     valor += c.getValorConta();
+    	     return c.getValorConta();
+    	     }
+
+    	       return valorTotal;
+    	 }
+    @Override
+  public void GerarTaxa(float valorTaxa) { 
+    	float valorDaTaxa = 10; 
+    	for(Contas c : this.Contas){
+	          valorDaTaxa= valorTaxa + c.getValorConta();
+	          c.setValorConta(valorDaTaxa);
+    	}
+    
+    }
+    @Override
+    public Float ConsultarTaxa(float ValorDaTaxa) throws TaxaInexistenteException {
+    	for (TaxaCondominio t : this.TaxaCondominio) {
+            if ( t.getValorTaxa() == ValorDaTaxa) {
+                return t.getValorTaxa();
+            }
+        }
+    	throw new  TaxaInexistenteException("Taxa inexistente");
+    }
+
+    @Override
+    public String buscarContas(String conta) throws ContaInexistenteException {
+         for(Contas c: this.Contas)  { 
+        	 if (c.getMesRef().equals(conta)){
+        		 return c.getMesRef();
+        	 }
+        }
+        throw new ContaInexistenteException("Não existe conta com essa caracteristica");
+    }
+
+    @Override
+    public void inserirConta(String desConta, float valor, String mesRef, String data)throws ContaExistenteException {
+    	for(Contas c : this.Contas){
+    		if(c.getDescricaoConta().equals(desConta) && c.getValorConta() == valor && c.getMesRef().equals(mesRef) && c.getDatadeVencimento().equals(data)){
+    			throw new ContaExistenteException("Já existe uma conta com essas caracteristicas");
+    	
+    		}
+    		else{
+    		 Contas.add(c);
+    		}
+    	}
+    }
+    public void cadastrarUnidade(int numero) throws UnidadeExistenteException{
+    	for(Unidade u: this.Unidades){
+    		if (u.getNumero()== numero){
+    			throw new UnidadeExistenteException("Unidade existente");
+    		}
+        this.Unidades.add(u);
+        break;
+    		
+    	}
+    }
+}   

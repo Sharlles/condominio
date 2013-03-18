@@ -6,61 +6,50 @@ import java.util.Date;
 
 public class Contas {
     
-    String Descricao;
-    Calendar DatadeVencimento;
-    String DataDeGeracao;
-    String MesRef;
+  private  String descricaoConta;
+  private  String DatadeVencimento;
+  private  String MesRef;
+  private float valorConta;
     
-   int taxa = 50;
-
-    public String getDataDeGeracao() {
-        return DataDeGeracao;
-    }
-
-    public Contas(String Descricao, Calendar DatadeVencimento, String DataDeGeracao, String MesRef) {
-        this.Descricao = Descricao;
+   
+    public Contas(String Descricao, String DatadeVencimento,float valor, String MesRef) {
+        this.descricaoConta = Descricao;
         this.DatadeVencimento = DatadeVencimento;
-        this.DataDeGeracao = DataDeGeracao;
+        this.valorConta = valor;
         this.MesRef = MesRef;
     }
 
 
-
-    public void setTaxa(int taxa) {
-        this.taxa = taxa;
-    }
-
-    public int getTaxa() {
-        return taxa;
-    }
-
-    public Calendar getDatadeVencimento() {
+    public String getDatadeVencimento() {
         return DatadeVencimento;
     }
 
-    public String getDescricao() {
-        return Descricao;
+    public String getDescricaoConta() {
+        return descricaoConta;
+    }
+    
+    public float getValorConta(){
+    	return valorConta;
     }
 
     public String getMesRef() {
         return MesRef;
     }
 
-    public void setDataDeGeracao(String DataDeGeracao) {
-        this.DataDeGeracao = DataDeGeracao;
-    }
-
-    public void setDatadeVencimento(Calendar DatadeVencimento) {
+   
+    public void setDatadeVencimento(String DatadeVencimento) {
         this.DatadeVencimento = DatadeVencimento;
     }
 
-    public void setDescricao(String Descricao) {
-        this.Descricao = Descricao;
+    public void setDescricaoConta(String Descricao) {
+        this.descricaoConta = Descricao;
     }
 
     public void setMesRef(String MesRef) {
         this.MesRef = MesRef;
     }
     
-    
+    public void setValorConta(float valorConta){
+    	this.valorConta = valorConta;
+    }
 }

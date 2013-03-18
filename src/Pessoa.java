@@ -1,9 +1,9 @@
 
 public class Pessoa {
     
-    String Nome;
-    String Cpf;
-    String Telefone;
+   private String Nome;
+   private String Cpf;
+   private String Telefone;
 
     public Pessoa(String Nome, String Cpf, String Telefone) {
         this.Nome = Nome;

@@ -1,9 +1,9 @@
 
 public class Unidade {
     
-    int Numero;
-    Pessoa Proprietario;
-    Pessoa Morador;
+    private int Numero;
+    private Pessoa Proprietario;
+    private  Pessoa Morador;
 
     public Unidade(int Numero, Pessoa Proprietario, Pessoa Morador) {
         this.Numero = Numero;
